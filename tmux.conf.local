@@ -306,25 +306,29 @@ tmux_conf_copy_to_os_clipboard=true
 #set -g history-limit 10000
 
 # start with mouse mode enabled
-set -g mouse on
+# set -g mouse on
 
 # force Vi mode
 #   really you should export VISUAL or EDITOR environment variable, see manual
-#set -g status-keys vi
-#set -g mode-keys vi
+set -g status-keys vi
+set -g mode-keys vi
 
-# replace C-b by C-a instead of using both prefixes
-# set -gu prefix2
-# unbind C-a
-# unbind C-b
-# set -g prefix C-a
-# bind C-a send-prefix
+unbind-key -T copy-mode MouseDragEnd1Pane
+unbind-key -T copy-mode-vi MouseDragEnd1Pane
 
-# move status line to top
-#set -g status-position top
+# Rebind vertical and horizontal split
+bind | split-window -h # Split panes horizontal
+bind _ split-window -v # Split panes vertically
+unbind '"'
+unbind %
+
+# Quick reload
+bind r source-file ~/.tmux.conf
 
 # TPM
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @yank_action 'copy-pipe'
 
 run '~/.tmux/plugins/tpm/tpm'

@@ -3,7 +3,9 @@ Installation for new laptop
 Swap caps lock to backspace, right shift to escape
 ```
 Windows: use remap.ahk
-Mac: Carabiner
+Mac: Carabiner 
+
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x70000002A},{"HIDKeyboardModifierMappingSrc":0x7000000E5,"HIDKeyboardModifierMappingDst":0x700000029}]}'
 ```
 
 Terminal
