@@ -332,3 +332,12 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @yank_action 'copy-pipe'
 
 run '~/.tmux/plugins/tpm/tpm'
+
+# Unbind pesky ctrl-b
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+#
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -i -selection clipboard"
+bind-key -T copy-mode-vi Y send-keys -X copy-pipe "xclip -i -selection clipboard"
