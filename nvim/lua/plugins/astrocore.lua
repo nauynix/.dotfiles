@@ -12,22 +12,22 @@ return {
     mappings = {
       n = {
         -- Quickfix
-        ["<A-j>"] = { "<cmd>cnext<cr>", desc = "Next quickfix item" },
-        ["<A-k>"] = { "<cmd>cprev<cr>", desc = "Previous quickfix item" }
-        ["<A-q>"] = {
+        ["<Esc>j"] = { "<cmd>cnext<cr>", desc = "Next quickfix item" },
+        ["<Esc>k"] = { "<cmd>cprev<cr>", desc = "Previous quickfix item" },
+        ["<Esc>q"] = {
           function()
             local qf_exists = false
             for _, win in pairs(vim.fn.getwininfo()) do
               if win["quickfix"] == 1 then qf_exists = true end
             end
             if qf_exists then
-              vim.cmd("cclose")
+              vim.cmd "cclose"
             else
               -- Only open if there are actually items in the list
               if not vim.tbl_isempty(vim.fn.getqflist()) then
-                vim.cmd("copen")
+                vim.cmd "copen"
               else
-                print("Quickfix list is empty")
+                print "Quickfix list is empty"
               end
             end
           end,
@@ -37,7 +37,7 @@ return {
         s = { "<Plug>(leap)", desc = "Leap to target" },
         S = { "<Plug>(leap-from-window)", desc = "Leap from window" },
         -- Search
-        ["<Leader>fw"] = {
+        ["<leader>fw"] = {
           function()
             local exclusion_globs = {
               -- Exclude files in plz-out/ anywhere in src/
@@ -58,7 +58,7 @@ return {
               title = "Find words (Non-Regex, Sourcegraph)",
             }
           end,
-          desc = "Find words",
+          desc = "Find words (Non-Regex, Sourcegraph)",
         },
         ["<Leader>fc"] = {
           function()
