@@ -37,7 +37,7 @@ return {
         s = { "<Plug>(leap)", desc = "Leap to target" },
         S = { "<Plug>(leap-from-window)", desc = "Leap from window" },
         -- Search
-        ["<leader>fw"] = {
+        ["<Leader>fw"] = {
           function()
             local exclusion_globs = {
               -- Exclude files in plz-out/ anywhere in src/
@@ -55,10 +55,19 @@ return {
             require("snacks.picker").grep {
               glob = exclusion_globs,
               regex = false,
-              title = "Find words (Non-Regex, Sourcegraph)",
+              title = "Find word",
             }
           end,
-          desc = "Find words (Non-Regex, Sourcegraph)",
+          desc = "Find word",
+        },
+        ["<Leader>fW"] = {
+          function()
+            require("snacks.picker").grep {
+              regex = false,
+              title = "Find word in all files",
+            }
+          end,
+          desc = "Find word in all files",
         },
         ["<Leader>fc"] = {
           function()
@@ -77,11 +86,18 @@ return {
             }
             require("snacks.picker").grep_word {
               glob = exclusion_globs,
-              regex = false,
-              title = "Find words (Sourcegraph)",
+              title = "Find word under cursor",
             }
           end,
           desc = "Find word under cursor",
+        },
+        ["<Leader>fC"] = {
+          function()
+            require("snacks.picker").grep_word {
+              title = "Find word under cursor in all files",
+            }
+          end,
+          desc = "Find word under cursor in all files",
         },
       },
       v = {
