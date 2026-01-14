@@ -52,6 +52,10 @@ return {
           end,
           desc = "Toggle Quickfix Window",
         },
+        ["<Leader>fq"] = {
+          function() require("snacks.picker").qflist() end,
+          desc = "Open Quickfix in Snacks",
+        },
         -- Leap
         s = { "<Plug>(leap)", desc = "Leap to target" },
         S = { "<Plug>(leap-from-window)", desc = "Leap from window" },
