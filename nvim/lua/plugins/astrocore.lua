@@ -11,6 +11,25 @@ return {
     -- Mappings can be configured through AstroCore as well.
     mappings = {
       n = {
+        -- Custom launcher for lazygit to remove escape binding
+        ["<Leader>gg"] = {
+          function()
+            local Terminal = require("toggleterm.terminal").Terminal
+            local lazygit_term = Terminal:new {
+              cmd = "lazygit",
+              direction = "float", -- or "vertical", "horizontal"
+              -- Define an on_attach function to modify settings after the terminal opens
+              on_open = function(term)
+                local bufnr = term.bufnr
+                -- Instead of 'del', set a buffer-local <esc> binding to do nothing,
+                -- allowing the keypress to pass through to the shell (lazygit)
+                vim.keymap.set("t", "<esc>", "", { buffer = bufnr, silent = true })
+              end,
+            }
+            lazygit_term:toggle()
+          end,
+          desc = "ToggleTerm lazygit",
+        },
         -- Quickfix
         ["<Esc>j"] = { "<cmd>cnext<cr>", desc = "Next quickfix item" },
         ["<Esc>k"] = { "<cmd>cprev<cr>", desc = "Previous quickfix item" },
@@ -105,6 +124,10 @@ return {
       },
       o = {
         s = { "<Plug>(leap)", desc = "Leap to target (Operator)" },
+      },
+      t = {
+        -- This maps the Escape key to the sequence that exits the terminal to normal mode
+        ["<esc>"] = { "<C-\\><C-n>", desc = "Exit terminal to Normal mode" },
       },
     },
   },
