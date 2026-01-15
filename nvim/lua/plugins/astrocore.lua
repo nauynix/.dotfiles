@@ -23,7 +23,7 @@ return {
                 local bufnr = term.bufnr
                 -- Instead of 'del', set a buffer-local <esc> binding to do nothing,
                 -- allowing the keypress to pass through to the shell (lazygit)
-                vim.keymap.set("t", "<esc>", "", { buffer = bufnr, silent = true })
+                vim.keymap.set("t", "<esc>", "<Esc>", { buffer = bufnr, silent = true })
               end,
             }
             lazygit_term:toggle()
