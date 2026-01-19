@@ -31,9 +31,9 @@ return {
           desc = "ToggleTerm lazygit",
         },
         -- Quickfix
-        ["<Esc>j"] = { "<cmd>cnext<cr>", desc = "Next quickfix item" },
-        ["<Esc>k"] = { "<cmd>cprev<cr>", desc = "Previous quickfix item" },
-        ["<Esc>q"] = {
+        ["<A-j>"] = { "<cmd>cnext<cr>", desc = "Next quickfix item" },
+        ["<A-k>"] = { "<cmd>cprev<cr>", desc = "Previous quickfix item" },
+        ["<A-q>"] = {
           function()
             local qf_exists = false
             for _, win in pairs(vim.fn.getwininfo()) do
