@@ -5,6 +5,29 @@
 
 local function escape_pattern(text) return string.gsub(text, "([%(%)%.%+%-%*%?%[%]%^%$])", "%%%1") end
 
+-- Helper function to URL-encode a string, EXCLUDING the forward slash (/)
+local function url_encode(str)
+  if str == nil then return "" end
+  -- Changed pattern to keep forward slashes unencoded: [^%w%.%-%_%/]
+  str = string.gsub(str, "([^%w%.%-%_%/])", function(c) return "%%" .. string.format("%02X", string.byte(c)) end)
+  return str
+end
+-- Helper function to open a URL cross-platform
+local function open_url_in_browser(url)
+  local open_command
+  if vim.fn.has "mac" == 1 then
+    open_command = "open"
+  elseif vim.fn.has "unix" == 1 then
+    open_command = "xdg-open"
+  else
+    -- Fallback for Windows (adjust if needed for your environment)
+    open_command = "start"
+  end
+
+  -- Use jobstart for non-blocking execution
+  vim.fn.jobstart({ open_command, url }, { detach = true })
+end
+
 ---@type LazySpec
 return {
   "AstroNvim/astrocore",
@@ -40,6 +63,30 @@ return {
             term:toggle()
           end,
           desc = "Run plz test for current parent directory",
+        },
+        ["<Leader>yc"] = {
+          function()
+            local current_file = vim.fn.expand "%:p"
+            local project_root = vim.fn.getcwd()
+            project_root = string.gsub(project_root, "/$", "")
+            local escaped_root = escape_pattern(project_root)
+            -- Get the path segment from the root, ending with /... to match the plz style
+            local rel_path_segment = string.gsub(current_file, "^" .. escaped_root .. "/", "", 1)
+
+            -- Construct the Sourcegraph URL
+            -- URL template: https://sourcegraph.iap.tmachine.io/search?q=repo:%5Egit%5C.gaia%5C.tmachine%5C.io/diffusion/CORE%24+%s&patternType=literal
+            -- The %s placeholder is where we insert our relative path segment
+            local base_url_template =
+              "https://sourcegraph.iap.tmachine.io/search?q=repo:%%5Egit%%5C.gaia%%5C.tmachine%%5C.io/diffusion/CORE%%24+%s&patternType=literal"
+
+            -- URL encode the path segment to be safe for the query parameter
+            local encoded_path = url_encode(rel_path_segment)
+            local full_url = string.format(base_url_template, encoded_path)
+
+            -- Open the URL in the system browser
+            open_url_in_browser(full_url)
+          end,
+          desc = "Open current parent directory in Sourcegraph",
         },
 
         -- Optional: Add a name for the group in which-key menu
