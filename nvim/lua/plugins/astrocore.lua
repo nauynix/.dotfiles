@@ -3,6 +3,8 @@
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
 --       as this provides autocomplete and documentation while editing
 
+local function escape_pattern(text) return string.gsub(text, "([%(%)%.%+%-%*%?%[%]%^%$])", "%%%1") end
+
 ---@type LazySpec
 return {
   "AstroNvim/astrocore",
@@ -11,6 +13,37 @@ return {
     -- Mappings can be configured through AstroCore as well.
     mappings = {
       n = {
+        ["<Leader>yt"] = {
+          function()
+            local current_file = vim.fn.expand "%:p"
+            local parent_dir_abs = vim.fn.fnamemodify(current_file, ":h")
+
+            -- Get the current working directory of Neovim (your project root)
+            local project_root = vim.fn.getcwd()
+
+            -- Escape the project root path for use as a literal pattern
+            local escaped_root = escape_pattern(project_root)
+
+            -- Substitute the root path from the absolute path string.
+            -- This should be robust against special characters.
+            local rel_path_segment = string.gsub(parent_dir_abs, "^" .. escaped_root .. "/", "", 1)
+
+            -- The command format "plz test //path/from/root/..."
+            local command = "plz test " .. rel_path_segment .. "/..."
+
+            local Terminal = require("toggleterm.terminal").Terminal
+            local term = Terminal:new {
+              cmd = command,
+              direction = "horizontal",
+              close_on_exit = false,
+            }
+            term:toggle()
+          end,
+          desc = "Run plz test for current parent directory",
+        },
+
+        -- Optional: Add a name for the group in which-key menu
+        ["<Leader>y"] = { name = "Yank" },
         -- Custom launcher for lazygit to remove escape binding
         ["<Leader>gg"] = {
           function()
