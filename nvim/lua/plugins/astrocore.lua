@@ -51,14 +51,30 @@ return {
             -- This should be robust against special characters.
             local rel_path_segment = string.gsub(parent_dir_abs, "^" .. escaped_root .. "/", "", 1)
 
-            -- The command format "plz test //path/from/root/..."
-            local command = "plz test " .. rel_path_segment .. "/..."
+            -- This is the command we want to run and put in history
+            local command_to_run = "plz watch " .. rel_path_segment .. "/..."
 
             local Terminal = require("toggleterm.terminal").Terminal
             local term = Terminal:new {
-              cmd = command,
+              -- We run an empty zsh shell, ready for input
+              cmd = "zsh",
               direction = "horizontal",
               close_on_exit = false,
+
+              -- The on_open function runs right after the terminal buffer is ready
+              on_open = function(_)
+                local cr_key = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+
+                -- 2. Inject the command line using a feedkeys approach
+                -- The 'silent' version is better for mapping execution
+                vim.api.nvim_feedkeys(
+                  command_to_run .. cr_key,
+                  "t", -- 't' mode means feedkeys to the terminal
+                  false -- not silent, so user sees input
+                )
+
+                -- Note: The feedkeys method automatically places the command into the current session's history.
+              end,
             }
             term:toggle()
           end,
