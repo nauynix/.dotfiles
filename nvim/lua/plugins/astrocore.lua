@@ -93,7 +93,7 @@ return {
             -- URL template: https://sourcegraph.iap.tmachine.io/search?q=repo:%5Egit%5C.gaia%5C.tmachine%5C.io/diffusion/CORE%24+%s&patternType=literal
             -- The %s placeholder is where we insert our relative path segment
             local base_url_template =
-              "https://sourcegraph.iap.tmachine.io/search?q=repo:%%5Egit%%5C.gaia%%5C.tmachine%%5C.io/diffusion/CORE%%24+%s&patternType=literal"
+              "https://sourcegraph.iap.tmachine.io/search?q=repo:%%5Egit%%5C.tmachine%%5C.io/diffusion/CORE%%24+%s&patternType=literal"
 
             -- URL encode the path segment to be safe for the query parameter
             local encoded_path = url_encode(rel_path_segment)
