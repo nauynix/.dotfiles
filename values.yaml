@@ -1,0 +1,1412 @@
+access_control:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: access_control_migrator
+    name: access_control
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: access_control
+access_control_api:
+  default_permissions_policy: |
+    package access_control_api_permissions
+
+    default allow = false
+
+    allow {
+      input.valid_scopes[_] == input.jwt_claims.scp[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == split(input.jwt_claims.scope, " ")[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == input.role_privileges[_]
+    }
+  endpoint: access-control-api.xinyuan-test2.dh-production.tmachine.io
+  shared_endpoint: ""
+account:
+  default_denomination: GBP
+  permitted_denominations: '["GBP"]'
+  refresh_interval_ms: 20
+async_contract_execution:
+  low_priority_max_wait: 5s
+  max_tps: 100000
+audit:
+  cleanup:
+    batch_initial_size: "500"
+    schedule: 4 0 * * *
+    stall_timeout_seconds: "20"
+    ttl: 1 DAYS
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: audit_migrator
+    name: audit
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "10"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: audit
+  endpoint: audit-api.xinyuan-test2.dh-production.tmachine.io
+  response_payload_size_limits: |
+    {
+    }
+  shared_endpoint: ""
+  vault_object_type_policies: |
+    default:
+      - "default_audit_view"
+audit_api:
+  default_permissions_policy: |
+    package audit_api_permissions
+
+    default allow = false
+
+    allow {
+      input.valid_scopes[_] == input.jwt_claims.scp[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == split(input.jwt_claims.scope, " ")[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == input.role_privileges[_]
+    }
+auth:
+  service_account_cache_size: "200"
+  session_certificate_l1_cache_ttl: 500ms
+  session_certificate_l2_cache_ttl: 500ms
+balances:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: vault_migrator
+    name: vault
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: vault
+bearer_auth:
+  default_jwt_audience: ""
+  issuers: |
+    [
+    ]
+  jwks_refresh_period: 168h
+  jwks_uri: http://jwt-service:8123/keys
+  max_token_lifetime: 24h
+  role_based_access_control:
+    cache_ttl: 60s
+    roles_path: roles
+  static_public_keys: '[{"kid":"default","fname":"public_key.pem"}]'
+bottomline:
+  endpoint: bottomline.xinyuan-test2.dh-production.tmachine.io
+  instructing_bank_code: "123456"
+  instructing_bank_name: Test Bank
+bulk_operations:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: bulk_operations_migrator
+    name: bulk_operations
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: bulk_operations
+calendar:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: calendar_migrator
+    name: calendar
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: calendar
+calendar_schedules:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: calendar_schedules_migrator
+    name: calendar_schedules
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: calendar_schedules
+clu:
+  endpoint: clu-api.xinyuan-test2.dh-production.tmachine.io
+common:
+  background_tasks:
+    execution_time_window: 00:00-00:00
+    execution_time_zone: UTC
+  bank:
+    name: testbank
+    sort_code: 10-00-00
+  basic_auth:
+    authentication: disable
+    expected_cookie_value: 741e0d4786b746fd7b2f15c78c6bfd0df6ebc2f90270460fefe7785660efe082
+    expected_mobile_header_value: 606d9fa53ddde60ee97fc07728ee4afcd3d40c813a16fa4de60274c1c4f724db
+    password: topsecret
+    password_hash: $apr1$vault$r8zSo5z8xGRTLnCCcbS83.
+    username: someuser
+  cloud_iam_environment: unspecified
+  csp_account_name: tm-gcp-dh-clusters-0
+  csp_integrations:
+    aws:
+      iam_role_prefix: ""
+    gcp:
+      project_id: tm-gcp-dh-clusters-0
+      workload_identity_federation:
+        pool_id: ""
+        pool_provider_id: ""
+        project_number: ""
+  db:
+    auth_mechanism: password
+    aws_iam:
+      append_username_suffix: "true"
+      csp_account_id: ""
+      db_resource_id: ""
+      oidc_provider: ""
+      region: ""
+      tm_iam_prefix: tm_prefix
+    log_level: "2"
+    pool:
+      enabled: "true"
+      host: ""
+      max_replicas: "2"
+      min_replicas: "2"
+      named_prepared_statements: "true"
+      port: "0"
+      read_replica: ""
+      tracing: "false"
+    pool_max_conns: "20"
+    ssl: "true"
+    ssl_mode: require
+    use_username_hostname_format: "false"
+  deployment_size: extra-small
+  is_local: "false"
+  mode:
+    enable_kafka_based_derived_db_replication: false
+    ignore_messages:
+      end_time: 0
+      start_time: 0
+    passive: false
+    standby_db: false
+  object_store:
+    gcp:
+      project_id: ""
+    url: gs://xinyuan-test2-1a11
+  production_reconciliation: "false"
+  services:
+    domain: xinyuan-test2.dh-production.tmachine.io
+  use_username_hostname_format: "true"
+common_stream_api:
+  message_format: json
+configuration_layer:
+  db:
+    host: patroni-master
+    migrator_user: configuration_layer_migrator
+    name: configuration_layer
+    user: configuration_layer
+  importer:
+    use_jwt: "false"
+contract_db_data_exporter:
+  publish_interval: 30m
+contract_events:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: contract_events_migrator
+    name: contract_events
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: contract_events
+contract_executor:
+  size: small
+contracts_observability:
+  hooks:
+    conversion_hook:
+      level: on_hook_defined
+    post_parameter_change_hook:
+      level: on_hook_defined
+    post_posting_hook:
+      level: on_hook_defined
+    scheduled_event_hook:
+      level: on_hook_defined
+core:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: core_migrator
+    name: core
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "70"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+      user: null
+    user: core
+  endpoint: core-api.xinyuan-test2.dh-production.tmachine.io
+  product_key: eyJhbGciOiJFZERTQSIsImtpZCI6ImludGVybmFsIiwidHlwIjoiSldUIn0.eyJpbnN0YW5jZU5hbWUiOiJjb3JlLXN0YWdpbmciLCJsaWNlbmNlRXhwaXJ5IjoxNzc5NTQ3ODY1LCJmZWF0dXJlcyI6WyJwYXJhbWV0ZXItdmFsdWUtaGllcmFyY2h5IiwibXVsdGlwbGUtcHJvY2Vzc2luZy1ncm91cHMiLCJoaWdoLXZvbHVtZS1hY2NvdW50cyIsInNjaGVkdWxlZC1hZGp1c3RtZW50cyIsImVudGVycHJpc2UiXSwiaXNzIjoiamVyenlAdGhvdWdodG1hY2hpbmUubmV0Iiwic3ViIjoidGhvdWdodG1hY2hpbmUiLCJleHAiOjE3Nzk1NDc4NjUsIm5iZiI6MTc0ODAxMTg2NSwiaWF0IjoxNzQ4MDExODY1fQ.FQgY0tN0S8QX0PPy_CuSYqvPvD5MsM_RA2HRR0EIBD587zQIBhbpzn3qXWSB5rd9gGjoslBfwUYQMEMqlp1UBg
+  shared_endpoint: ""
+core_api:
+  default_permissions_policy: |
+    package core_api_permissions
+
+    default allow = false
+
+    allow {
+      input.valid_scopes[_] == input.jwt_claims.scp[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == split(input.jwt_claims.scope, " ")[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == input.role_privileges[_]
+    }
+core_apps:
+  endpoint: coreapps.xinyuan-test2.dh-production.tmachine.io
+  shared_endpoint: ""
+customer:
+  db:
+    host: patroni-master
+    migrator_user: customer_migrator
+    name: customer
+    user: customer
+  website:
+    endpoint: customer.xinyuan-test2.dh-production.tmachine.io
+data_loader:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: data_loader_migrator
+    name: data_loader
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: data_loader
+data_loader_api:
+  default_permissions_policy: |
+    package data_loader_api_permissions
+
+    default allow = false
+
+    allow {
+      input.valid_scopes[_] == input.jwt_claims.scp[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == split(input.jwt_claims.scope, " ")[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == input.role_privileges[_]
+    }
+  endpoint: data-loader-api.xinyuan-test2.dh-production.tmachine.io
+  message_format: json
+data_retention:
+  db:
+    host: patroni-master
+    migrator_user: data_retention_migrator
+    name: data_retention
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: data_retention
+  deleter:
+    enable_for_all_resources: false
+    schedule: 0 4 * * *
+db_admin_password_rotation:
+  alloydb:
+    db_admin_user: postgres
+dlq_inspector:
+  cleanup:
+    schedule: 0 3 * * *
+  endpoint:
+    cleanup:
+      batch_size: "1000"
+      retention_period: 2160h
+documentation:
+  endpoint: documentation.xinyuan-test2.dh-production.tmachine.io
+documents:
+  endpoint: documents.xinyuan-test2.dh-production.tmachine.io
+  port: "443"
+  shared_endpoint: ""
+dr_timestamp_collector:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: dr_timestamp_collector_migrator
+    name: dr_timestamp_collector
+    pool:
+      host: dbpool
+    port: "5432"
+    user: dr_timestamp_collector
+edge_functions:
+  data_deleter:
+    enable_deletion: false
+    execution_failed_batch_size: "2000"
+    execution_failed_retention_period_days: "90"
+    execution_succeeded_batch_size: "2000"
+    execution_succeeded_retention_period_days: "90"
+    schedule: 0 4 * * *
+    trigger_operation_failed_batch_size: "2000"
+    trigger_operation_failed_retention_period_days: "90"
+    trigger_operation_succeeded_batch_size: "2000"
+    trigger_operation_succeeded_retention_period_days: "90"
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: edge_functions_migrator
+    name: edge_functions
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: edge_functions
+  endpoint: edge-functions-api.xinyuan-test2.dh-production.tmachine.io
+  execution:
+    execution_cleanup_budget: 5s
+  shared_endpoint: ""
+  triggers:
+    enable_service_account_identity: "true"
+edge_functions_api:
+  default_permissions_policy: |
+    package edge_functions_api_permissions
+
+    default allow = false
+
+    allow {
+      input.valid_scopes[_] == input.jwt_claims.scp[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == split(input.jwt_claims.scope, " ")[_]
+    }
+
+    allow {
+      input.valid_scopes[_] == input.role_privileges[_]
+    }
+eplatform:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: eplatform_migrator
+    name: eplatform
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: eplatform
+feature_flags:
+  add_ons: disable
+  flags_add_ons: ""
+  flags_global: CPP_1250_V5 CPP_1430_ACCOUNTS_V2 IMP_1017_ACCOUNT_ATTRIBUTE_HOOK IMP_1090_POSTINGS_TARGET_ADDRESS
+    IMP_1119_SEARCH_BY_EXTERNAL_CUSTOMER_ID IMP_1154_ENRICH_POSTING_INSTRUCTIONS IMP_1227_CALENDAR_FETCHERS
+    IMP_1261_ACCESS_CONTROL_RBAC IMP_1376_SIMPLIFIED_SCHEDULER IMP_1376_SIMPLIFIED_SCHEDULER_MIGRATION
+    IMP_1376_SIMPLIFIED_SCHEDULER_ROLLBACK IMP_1479_SNAPSHOT_TIME_BALANCE_TIMESERIES_FETCHING
+    IMP_153_ADJUSTMENTS_PROD IMP_1599_DISASTER_RECOVERY_MULTIDB IMP_1911_CONTRACTS_MANAGEMENT_SERVICE
+    IMP_2226_FETCH_BALANCE_DELTA_ALL_HOOKS IMP_45_HIGH_VOLUME_ACCOUNTS IMP_48_DATA_RETENTION
+    IMP_4_MULTIPLE_PROCESSING_GROUPS IMP_50_EXPECTED_POSTING_INSTRUCTION_DIRECTIVE_REJECTIONS
+    IMP_55_AEP_COL_POST_POSTING_AND_POST_PARAMETER_HOOK_INTEGRATION IMP_55_AEP_COL_SCHEDULE_HOOK_INTEGRATION
+    IMP_654_TRIGGERED_EDGE_FUNCTIONS IMP_680_FUTURE_DATED_POSTINGS KERN_337_ACCOUNT_TIMESTAMPS_MIGRATIONS_JOB
+    OPDASH_151_POSTING_RESTRICTION_SET_DETAILS OPDASH_152_SESSION_TIMEOUT_LOGOUT OPDASH_317_CUSTOM_DISPLAY_TIMEZONE
+    PYMT_102_TOTAL_AUTHORISATION_ADJUSTMENT_AMOUNTS PYMT_85_LIMIT_NUMBER_POSTINGS_IN_CUSTOM_TYPE
+    TMV_100_ASYNCHRONOUS_POSTINGS_LEDGER TMV_105_NODE_DETAILS_INHERITANCE_V2 TMV_153_SURFACE_WORKFLOW_INSTANCE_UI_DESCRIPTORS
+    TMV_1626_25_SKIP_SCHEDULES_IN_CONTRACTS TMV_1662_BALANCES_REDIS_CACHING TMV_1743_POSTINGS_REDIS_CACHING
+    TMV_1873_OPTIONAL_PRE_POSTINGS_HOOK_RELEASES TMV_215_STRING_CUSTOMER_IDS TMV_294_TTL_FOR_POSTINGS_API_REQUESTS
+    TMV_543_LOW_PRIORITY_CREATE_PIB_ASYNC TMV_614_OPTIMISED_BALANCE_FETCHING TMV_E_288_CT_POSTING_ACTIONS
+    TMV_E_416_WORKFLOW_RETRYABILITY_FOR_TECHNICAL_ERRORS TMV_E_445_WORKFLOW_INSTANCE_STATE_RETRIABILITY_UI
+    TMV_E_446_WORKFLOW_INSTANCE_TECHNICAL_ERROR_RETRIABILITY_UI TM_101193_GET_HOOK_NAME_VAULT_METHOD
+    TM_101194_SUPPORT_FULL_SEMVERS TM_107926_ADD_DESCRIPTION_TO_PROCESSING_GROUPS
+    TM_113402_BALANCES_V2_STREAMING_MIGRATION TM_45730_OPS_PROCESSOR_SMART_WINDOWING
+    TM_64178_OPS_CUSTOMER_ACCOUNT_INACTIVE_FLAGS TM_66497_SCHEDULER_MODIFICATIONS_FOR_SCHEDULE_MANAGER
+    TM_69160_SEQUENCE_ID TM_69163_LIST_EVENTS TM_69164_REPLAY_EVENTS TM_69580_ACCOUNT_UPDATE_RETRYABILITY
+    TM_69737_EMBEDDED_EXECUTION TM_69902_PLAN_UPDATE_DENORMALISATION TM_69994_SCHEDULER_RECONCILIATION
+    TM_69995_BALANCES_RECONCILIATION TM_69996_ENRICHED_PIB_RECONCILIATION TM_70793_PIB_RECONCILIATION
+    TM_70795_VAULT_JOBS_APP TM_70849_VAULT_JOBS_BACKEND TM_70887_MOVE_SCX_PARSE_ENDPOINT_TO_CP
+    TM_71209_MOVE_CX_PARSE_ENDPOINT_TO_CP TM_71248_GLOBAL_PARAMS_MIGRATION TM_71294_OPS_LANGUAGE_SWITCHER
+    TM_71338_EXISTING_ACCOUNT_SIMULATION TM_71655_FLAG_DESCRIPTION_STREAMING TM_71829_MOVE_JOB_WRITE_OUTCOME_PROCESSOR
+    TM_71893_EMBEDDED_SUPERVISOR_EXECUTION TM_71957_CREATE_PROCESSING_GROUPS TM_71957_PROCESSING_GROUPS
+    TM_72181_OPS_DISPLAY_RAW_JSON TM_72493_IMMEDIATE_SCHEDULE_UPDATES TM_72535_SCHEDULER_GROUP_MODIFIABLE
+    TM_73315_VAULT_4L_ACCOUNT_DATA_MIGRATION TM_74862_BULK_GROUPS TM_75160_CORE_APPS_SAML_AUTH
+    TM_75855_MIGRATE_SCHEDULE_SETS TM_76234_SCHEDULER_REASSIGN_GROUP TM_76278_SCHEDULE_MANAGER_CLIENT_RESOURCE
+    TM_76775_SCHEDULE_MANAGER_VAULT_JOBS TM_77174_FLAG_RECONCILIATION TM_77183_RESTRICTION_SET_RECONCILIATION
+    TM_77187_DATA_LOADER_PARAMETERS_V2 TM_78259_REJECTION_FROM_ACTIVATION_CONVERSION_HOOKS
+    TM_82410_OPS_PARAMS_V2 TM_83189_VAULT_LOOKUP_APP TM_84216_REMOVE_ACCOUNT_PROCESSOR_REPUBLISHER
+    TM_84752_TOPIC_INSPECTOR_APP TM_85152_LIST_SCHEDULES_BY_RESOURCE TM_85182_FLAGS_SERVICE_V2
+    TM_85278_CONFIGURABLE_MINIMUM_OBSERVATION_TIME TM_87874_SUPPORT_RETRY_IN_VAULT_JOBS
+    TM_88754_OPERATIONAL_CONTROL_OF_SCHEDULES TM_88945_USAGE_BACKFILLER TM_88946_USAGE_COLLECTOR
+    TM_88947_USAGE_COMMITTER TM_88948_USAGE_MONITOR_CLIENT_UI TM_94225_VAULT_JOBS_MULTIPLE_PROCESSING_GROUPS_NOTIFICATION
+    TM_94865_REPUBLISH_JOBS TM_95852_SCHEDULER_EXECUTION_TIMES TM_96463_SUPPORT_CLV3_SCHEDULES_VAULT_JOBS
+    TM_96469_LIST_JOBS_EXPANSION TM_96471_OVERRIDE_JOBS_STATUS TM_96897_ACCOUNTS_MANAGEMENT_APP
+    TM_96952_FETCH_ACCOUNT_TIMESERIES_IN_EXISTING_ACCOUNT_SIMULATION TM_97518_JOB_METADATA_LIST_JOBS
+    TM_97819_SIMULATION_PARAMETER_FILTERING TM_98998_COVERING_POSTINGS_VIA_CONTRACTS_HOOK_ARGS_FIELD
+    TM_99486_PROCESSING_GROUPS_APP WFLOW_110_TICKETS_TO_TASKS_DUAL_WRITE WFLOW_191_ACCESS_CONTROL_FOR_TASK_THREADS
+    WFLOW_195_DATA_PERMISSION_IDS_FILTER WFLOW_57_WORKFLOWS_RETRYABILITY
+  flags_prerelease: IMP_646_BULK_CONVERSIONS IMP_1953_ACCOUNT_OPENING_WITH_SUB_ACCOUNTS
+    IMP_1954_POSTING_TO_SUB_ACCOUNTS IMP_1648_HISTORIC_CONTRACT_RESOLUTION
+  prerelease: enable
+integrations:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: integrations_migrator
+    name: integrations
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: integrations
+istio:
+  auth_policy:
+    mtls_allow_tls: true
+    mtls_mode: STRICT
+  cloud_platform: GCP
+  namespace: istio-system
+  proxy:
+    exclude_cidr: 10.134.0.0/16,10.135.0.0/16,10.144.0.0/20,10.8.128.0/20,10.9.128.0/20
+    exclude_inbound_ports: ""
+    exclude_outbound_ports: "5432"
+    include_cidr: '*'
+journal:
+  cleaner:
+    schedule: 10 4 * * *
+    schedule_overrides:
+      access-control-journal-clean-up-job: 25 4 * * *
+      account-balance-journal-cleaner-v3: 12 5 * * *
+      accounts-journal-clean-up-job: 12 5 * * *
+      accounts-journal-cleaner: 12 5 * * *
+      accounts-plans-journal-clean-up-job: 33 2 * * *
+      calendar-journal-clean-up-job: 5 4 * * *
+      contract-executions-journal-cleaner: 22 8 * * *
+      customers-journal-clean-up-job: 35 4 * * *
+      flags-journal-clean-up-job: 12 5 * * *
+      flags-journal-cleaner: 12 5 * * *
+      ledger-journal-cleaner-v3: 47 3 * * *
+      restriction-sets-journal-clean-up-job: 12 5 * * *
+      scheduler-journal-clean-up-job: 20 4 * * *
+      scheduler-vault-jobs-journal-cleaner: 13 4 * * *
+      sub-accounts-journal-clean-up-job: 12 5 1 * *
+      sub-accounts-journal-cleaner: 12 5 1 * *
+      tickets-journal-clean-up-job: 25 4 * * *
+      vault-jobs-journal-cleaner: 39 4 * * *
+      xpl-journal-clean-up-job: 3 4 * * *
+jwt_service:
+  endpoint: jwt-service.xinyuan-test2.dh-production.tmachine.io
+k8s:
+  certificate:
+    cluster_issuer:
+      name: google-public-ca-issuer
+    labels:
+      cert-manager.io/provider: cluster
+    use_wildcard_cert: "true"
+  cloud_provider: gcp
+  disable_scuttle: false
+  distribution: gke
+  docker_registry_path: europe-docker.pkg.dev/tm-artifacts/root
+  image_pull_secrets_name: ""
+  image_registry: europe-docker.pkg.dev/tm-artifacts/root
+  ingress:
+    access_control:
+      annotations: {}
+      shared_tls_secret_name: vault-access-control-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    annotations:
+      cert-manager.io/cluster-issuer: google-public-ca-issuer
+      external-dns.alpha.kubernetes.io/hostname: ingress.xinyuan-test2.dh-production.tmachine.io
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: 36s
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 600s
+      nginx.ingress.kubernetes.io/whitelist-source-range: 52.16.201.245/32,10.126.120.120/32,10.69.0.0/18,10.69.64.0/22,34.249.62.49/32,52.50.197.122/32,10.133.33.110/32,35.207.43.248/32,35.213.169.110/32,35.210.106.239/32,18.142.94.242/32,10.126.184.120/32,10.1.192.0/20,10.1.224.0/20,217.111.161.250/32,217.138.18.68/32,10.100.0.0/16,10.1.16.0/20,10.1.128.0/20,10.3.192.0/20,10.3.224.0/20,135.84.162.202/32,10.3.16.0/20,10.3.128.0/20,10.126.192.0/20,10.126.208.0/20,52.206.133.54/32,10.126.248.0/21,10.126.128.0/20,10.126.144.0/20,54.179.197.46/32,10.126.184.0/21,10.126.64.0/20,10.126.80.0/20,52.16.0.164/32,10.126.120.0/21,10.2.192.0/20,10.2.224.0/20,128.106.60.10/32,119.73.183.186/32,10.2.16.0/20,10.2.128.0/20,10.125.192.0/18,10.125.64.0/18,10.125.128.0/18,10.4.192.0/20,10.4.224.0/20,61.68.15.27/32,10.4.16.0/20,10.4.128.0/20,10.145.0.0/21,10.140.1.101/32,10.212.0.0/16,10.190.0.0/16,172.20.0.0/14,10.136.0.0/14,172.24.0.0/14,10.128.0.0/14,10.134.0.0/16,10.42.0.0/16,100.64.0.0/16,10.134.0.0/16,10.135.0.0/16
+      tmachine.io/dns.class: private
+    audit:
+      annotations: {}
+      shared_tls_secret_name: vault-audit-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    bottomline:
+      tls_secret_name: vault-ingress-cert
+    clu:
+      tls_secret_name: vault-ingress-cert
+    core:
+      annotations: {}
+      shared_tls_secret_name: vault-core-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    core_apps:
+      annotations: {}
+      shared_tls_secret_name: vault-core-apps-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    customer:
+      tls_secret_name: vault-ingress-cert
+    data_loader:
+      tls_secret_name: vault-ingress-cert
+    documentation:
+      tls_secret_name: vault-ingress-cert
+    documents:
+      annotations: {}
+      shared_tls_secret_name: vault-documents-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    edge_functions:
+      annotations: {}
+      shared_tls_secret_name: vault-edge-functions-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    http_only_ingresses: false
+    jwt_service:
+      tls_secret_name: vault-ingress-cert
+    labels: {}
+    multi_entity:
+      tls_secret_name: vault-ingress-cert
+    nestlings:
+      tls_secret_name: vault-ingress-cert
+    ops:
+      annotations:
+        nginx.ingress.kubernetes.io/service-upstream: "true"
+      vault_admin_website:
+        annotations: {}
+        shared_tls_secret_name: vault-ops-vault-admin-website-ingress-shared-cert
+        tls_secret_name: vault-ingress-cert
+      vault_websocket:
+        tls_secret_name: vault-ingress-cert
+    payments_hub:
+      tls_secret_name: vault-ingress-cert
+    products:
+      tls_secret_name: vault-ingress-cert
+    saml_idp:
+      tls_secret_name: vault-ingress-cert
+    switchboard:
+      annotations:
+        nginx.ingress.kubernetes.io/service-upstream: "true"
+        nginx.ingress.kubernetes.io/upstream-vhost: switchboard.xinyuan-test2.svc.cluster.local
+      tls_secret_name: vault-ingress-cert
+    vault_jobs_testing_integration:
+      tls_secret_name: vault-ingress-cert
+    workflow_simulator:
+      tls_secret_name: vault-ingress-cert
+    workflows:
+      annotations: {}
+      shared_tls_secret_name: vault-workflows-ingress-shared-cert
+      tls_secret_name: vault-ingress-cert
+    xpl:
+      tls_secret_name: vault-ingress-cert
+  ingress_controller:
+    inject_nginx_mtls_annotations: "true"
+  namespace: xinyuan-test2
+  pull_image_by_digest: true
+  pull_image_by_semver: false
+kafka:
+  client:
+    auth_mechanism: mtls
+    brokers: xinyuan-test2-kafka-bootstrap:9095
+    connection_setup_timeout: 60000
+    create_external_acls: "true"
+    disable_ssl: "false"
+    oauth:
+      auth_method: basic-auth
+      auth_server_endpoint: ""
+      extensions: ""
+      istio:
+        host_entry: ""
+        host_port: "443"
+        host_port_protocol: HTTPS
+      scopes: ""
+    ssl_subject: OU=vault,O=Thought Machine Ltd,L=London,ST=Greater London,C=GB
+    use_system_ca: "false"
+  dr_timestamp_collector:
+    enabled: true
+  e2e:
+    ssl_broker_listener: xinyuan-test2-kafka-bootstrap:9095
+    test_auth_mechanisms: mtls
+    test_producer:
+      endpoint:
+        go: kafka-test-producer-go.xinyuan-test2.dh-production.tmachine.io
+        python: kafka-test-producer-python.xinyuan-test2.dh-production.tmachine.io
+      ingress:
+        annotations:
+          cert-manager.io/acme-challenge-type: dns01
+          cert-manager.io/acme-dns01-provider: instances
+          cert-manager.io/cluster-issuer: google-public-ca-issuer
+          external-dns.alpha.kubernetes.io/hostname: ingress.xinyuan-test2.dh-production.tmachine.io
+          kubernetes.io/ingress.class: nginx-internal
+          nginx.ingress.kubernetes.io/backend-protocol: GRPC
+          nginx.ingress.kubernetes.io/whitelist-source-range: 52.16.201.245/32,10.126.120.120/32,10.69.0.0/18,10.69.64.0/22,34.249.62.49/32,52.50.197.122/32,10.133.33.110/32,35.207.43.248/32,35.213.169.110/32,35.210.106.239/32,18.142.94.242/32,10.126.184.120/32,10.1.192.0/20,10.1.224.0/20,217.111.161.250/32,217.138.18.68/32,10.100.0.0/16,10.1.16.0/20,10.1.128.0/20,10.3.192.0/20,10.3.224.0/20,135.84.162.202/32,10.3.16.0/20,10.3.128.0/20,10.126.192.0/20,10.126.208.0/20,52.206.133.54/32,10.126.248.0/21,10.126.128.0/20,10.126.144.0/20,54.179.197.46/32,10.126.184.0/21,10.126.64.0/20,10.126.80.0/20,52.16.0.164/32,10.126.120.0/21,10.2.192.0/20,10.2.224.0/20,128.106.60.10/32,119.73.183.186/32,10.2.16.0/20,10.2.128.0/20,10.125.192.0/18,10.125.64.0/18,10.125.128.0/18,10.4.192.0/20,10.4.224.0/20,61.68.15.27/32,10.4.16.0/20,10.4.128.0/20,10.145.0.0/21,10.140.1.101/32,10.212.0.0/16,10.190.0.0/16,172.20.0.0/14,10.136.0.0/14,172.24.0.0/14,10.128.0.0/14,10.134.0.0/16,10.42.0.0/16,100.64.0.0/16,10.134.0.0/16,10.135.0.0/16
+          tmachine.io/dns.class: private
+        labels:
+          cert-manager.io/provider: cluster
+    use_incremental_rebalancing: "true"
+    use_stream_consumer: "true"
+  monitoring:
+    disable_consumer_lag_exporter: "false"
+    disable_group_allowlist: "true"
+  topics:
+    default_num_partitions: "4"
+    default_retention_time_seconds: "604800"
+    disable_topic_reconciliation: false
+    disable_vault_topic_management: false
+    exclude_payments_hub_topics: true
+    exclude_workflows_topics: false
+    exclude_xpl_topics: true
+    replication_factor: "1"
+ledger:
+  backfill_warm_ledger:
+    batch_size: 5000
+    parallelism: 16
+    timeout_sec: 60s
+  jobs:
+    balance_milestone_reconciler:
+      account_verification_list: ""
+      base_delay_backoff_duration: 100ms
+      inactive_period: ""
+      initial_delay_backoff_duration: 10ms
+      max_delay_backoff_duration: 5s
+      max_retries: "10"
+      milestone_page_size: "10"
+      number_of_shards: "64"
+      parallelism: "16"
+      posting_max_uc_page_size: "50"
+      read_only: false
+      schedule: 0 10 * * *
+      shard_verification_list: ""
+      sleep_duration: 0s
+      watermark_update_frequency: "100"
+  partitioning:
+    average_daily_posting_volume: 0
+    average_posting_size: 600
+  redis_flush_on_dr: true
+  redis_host: redis-ring-ledger
+  redis_ring_shards: 1
+  target_latency: 350ms
+  target_latency_percentile: "0.95"
+ledger_balances:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: vault_migrator
+    name: vault
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: vault
+metrics:
+  exporters:
+    otlp_endpoint: ""
+    otlp_http_config: ""
+multi_entity_api:
+  endpoint: multi-entity-api.xinyuan-test2.dh-production.tmachine.io
+observability:
+  cluster_name: shared-platform-1
+  cluster_prometheus:
+    remote_write: []
+  grafana:
+    auth_anonymous_enabled: "true"
+    auth_anonymous_org_name: Main Org.
+    auth_anonymous_org_role: Editor
+    caAuth: "false"
+    caCert: ""
+    security_admin_user: vault
+  ingress:
+    domain: xinyuan-test2.dh-production.tmachine.io
+    labels:
+      cert-manager.io/provider: cluster
+    monitoring-annotations:
+      cert-manager.io/acme-challenge-type: dns01
+      cert-manager.io/acme-dns01-provider: instances
+      cert-manager.io/cluster-issuer: google-public-ca-issuer
+      external-dns.alpha.kubernetes.io/hostname: ingress.xinyuan-test2.dh-production.tmachine.io
+      kubernetes.io/ingress.class: nginx-internal
+      tmachine.io/dns.class: private
+  logging:
+    fluentd:
+      buffer:
+        chunk_limit_size: 8m
+        flush_interval: 60s
+        total_limit_size: 512m
+      index:
+        replicas: 1
+      log_level: info
+  monitoring_namespace: tm-monitoring
+  namespaced_prometheus:
+    db_queries:
+      storage:
+        size: 10Gi
+    exporter_replicas: 1
+    kafka:
+      remote_write:
+      - remoteTimeout: 1m
+        url: http://prom-bqa-instance-activity.internal.tmachine.io/write
+        writeRelabelConfigs:
+        - action: keep
+          regex: (namespace:kafka_messages_in:rate1h)
+          sourceLabels:
+          - __name__
+      storage:
+        size: 20Gi
+    kubelet:
+      storage:
+        size: 25Gi
+    kubernetes:
+      remote_write:
+      - remoteTimeout: 1m
+        url: http://prom-bqa-hosting-costs.internal.tmachine.io/write
+        writeRelabelConfigs:
+        - action: keep
+          regex: kube_namespace_annotations
+          sourceLabels:
+          - __name__
+        - action: keep
+          regex: .+
+          sourceLabels:
+          - annotation_vault_instance_tmachine_io_instance_type
+        - action: labelkeep
+          regex: (__name__|annotation_vault_instance_tmachine_io.*|kubernetes_namespace)
+      storage:
+        size: 25Gi
+    postgres:
+      storage:
+        size: 10Gi
+    redis:
+      storage:
+        size: 10Gi
+    remote_write: []
+    replicas: 1
+    retention: 6w
+    vault:
+      storage:
+        size: 70Gi
+  prometheus:
+    alertmanager_endpoint: _api._tcp.alertmanager.monitoring.svc.cluster.local.
+    custom_labels: {}
+    storage_size: 50Gi
+    storageclass: prometheus-optimized
+    thanos:
+      sidecar:
+        object_store: ""
+        objstore: |
+          type: GCS
+          config:
+            bucket: tm-longterm-metrics-production
+          prefix: metrics
+  provision_vertical_autoscaling_configs: true
+  thanos:
+    ingress:
+      host: metrics
+  vertical_autoscaling_update_mode: Auto
+offline_migrations:
+  cron: '*/10 * * * *'
+ops:
+  backend:
+    vault_admin_website:
+    - backend:
+        service:
+          name: vault-admin-website
+          port:
+            name: http
+      path: /
+      pathType: Prefix
+  bank_name: Test Bank
+  currency_display: code
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: ops_migrator
+    name: ops
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: ops
+  default_locale: en-GB
+  default_page_title: Test Bank
+  display_timezone: UTC
+  pluggable_components:
+    payments_hub: false
+    product_hub: false
+    workflows: false
+    xpl: false
+  supported_locales:
+  - en-GB
+  - de-DE
+  - es-ES
+  - es-XL
+  - fr-FR
+  - id-ID
+  - ko-KR
+  - vi-VN
+  use_browser_locale: true
+  website:
+    endpoint: ops.xinyuan-test2.dh-production.tmachine.io
+    shared_endpoint: ""
+payments_hub:
+  endpoint: payments-hub-api.xinyuan-test2.dh-production.tmachine.io
+  local_sort_codes: ""
+policy:
+  cacheRenewalInterval: 10s
+postings:
+  api:
+    enriched:
+      calendar:
+        id: ""
+        offset: ""
+    format: json
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: vault_migrator
+    name: vault
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: vault
+products_api:
+  endpoint: products-api.xinyuan-test2.dh-production.tmachine.io
+release:
+  name: vault
+  version: 0.0.0
+saml_idp:
+  certificate: '-----BEGIN CERTIFICATE-----MIIDBzCCAe+gAwIBAgIJAPr/Mrlc8EGhMA0GCSqGSIb3DQEBBQUAMBoxGDAWBgNVBAMMD3d3dy5leGFtcGxlLmNvbTAeFw0xNTEyMjgxOTE5NDVaFw0yNTEyMjUxOTE5NDVaMBoxGDAWBgNVBAMMD3d3dy5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANDoWzLos4LWxTn8Gyu2lEbl4WcelUbgLN5zYm4ron8Ahs+rvcsu2zkdD/s6jdGJI8WqJKhYK2u61ygnXgAZqC6ggtFPnBpizcDzjgND2g+aucSoUODHt67f0fQuAmupN/zp5MZysJ6IHLJnYLNpfJYk96lRz9ODnO1Mpqtr9PWxm+pz7nzq5F0vRepkgpcRxv6ufQBjlrFytccyEVdXrvFtkjXcnhVVNSR4kHuOOMS6D7pebSJ1mrCmshbD5SX1jXPBKFPAjozYX6PxqLxUx1Y4faFEf4MBBVcInyB4oURNB2s59hEEi2jq9izNE7EbEK6BY5sEhoCPl9m32zE6ljkCAwEAAaNQME4wHQYDVR0OBBYEFB9ZklC1Ork2zl56zg08ei7ss/+iMB8GA1UdIwQYMBaAFB9ZklC1Ork2zl56zg08ei7ss/+iMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAAVoTSQ5pAirw8OR9FZ1bRSuTDhY9uxzl/OL7lUmsv2cMNeCB3BRZqm3mFt+cwN8GsH6f3uvNONIhgFpTGN5LEcXQz89zJEzB+qaHqmbFpHQl/sx2B8ezNgT/882H2IH00dXESEfy/+1gHg2pxjGnhRBN6el/gSaDiySIMKbilDrffuvxiCfbpPN0NRRiPJhd2ay9KuL/RxQRl1gl9cHaWiouWWba1bSBb2ZPhv2rPMUsFo98ntkGCObDX6Y1SpkqmoTbrsbGFsTG2DLxnvr4GdN1BSr0Uu/KV3adj47WkXVPeMYQti/bQmxQB8tRFhrw80qakTLUzreO96WzlBBMtY=-----END
+    CERTIFICATE-----'
+  email_attribute: urn:oid:1.3.6.1.4.1.5923.1.1.1.6
+  endpoint: saml.xinyuan-test2.dh-production.tmachine.io
+  entity_id: https://saml.xinyuan-test2.dh-production.tmachine.io/metadata
+  name_attribute: http://schemas.microsoft.com/identity/claims/displayname
+  roles_attribute: urn:oid:1.3.6.1.4.1.5923.1.1.1.1
+  slo_url: https://saml.xinyuan-test2.dh-production.tmachine.io/slo
+  sso_url: https://saml.xinyuan-test2.dh-production.tmachine.io/sso
+saml_sp:
+  authn_requests_signed: false
+  fail_on_authn_context_mismatch: false
+  metadata_cache_ttl: 604800
+  metadata_valid_for: 172800
+  name_id_encrypted: false
+  requested_authn_context: false
+  sign_metadata: false
+  signature_algorithm: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+  sls_req_signed: false
+  sls_resp_signed: false
+  strict: false
+  want_assertions_encrypted: false
+  want_assertions_signed: false
+  want_attribute_statement: false
+  want_messages_signed: false
+  want_name_id: false
+  want_name_id_encrypted: false
+schedule_manager:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: schedule_manager_migrator
+    name: schedule_manager
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: schedule_manager
+scheduler:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: scheduler_migrator
+    name: scheduler
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: scheduler
+  max_tps: 100000
+  mode:
+    passive: false
+  update_interval_secs: "20"
+  update_inverval_secs: ""
+  use_legacy_tags_query: false
+secrets_management:
+  hashicorp_vault:
+    address: https://hault.shared-platform-1.dh-production.tmachine.io
+    auth_k8s_backend: kubernetes
+    db:
+      ca: hault-kv
+      pki_mount_point: pki
+    kafka:
+      ca: hault-kv
+      pki_mount_point: pki
+    secret_mount_point: secret
+    secret_prefix: xinyuan-test2
+    secret_version: "2"
+    vault_installer_hault_role: vault-installer
+support:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: support_migrator
+    name: support
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: support
+switchboard:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: switchboard_migrator
+    name: switchboard
+    port: "5432"
+    user: switchboard
+  endpoint: switchboard.xinyuan-test2.dh-production.tmachine.io
+tracing:
+  bsp:
+    max_queue_size: "512"
+  collector:
+    otlp_endpoint: http://agent-otel-collector:4317
+  exporter:
+    config:
+      otlp:
+        endpoint: trace-receiver.tm-gcp-emea-dh-production.tmachine.io:443
+        tls:
+          insecure: false
+    debug_logs: false
+    jaeger-endpoint: ""
+    list:
+    - otlp
+    otlp_endpoint: ""
+    otlp_http_endpoint: ""
+    zipkin-endpoint: jaeger-vault-collector.jaeger:9411
+  sampler:
+    arg: "0.0001"
+    type: parentbased_traceidratio
+upgrade_path:
+  downtime:
+    aborter_batch_size: "100"
+    accounts_initialise_batch_size: "1000"
+    accounts_max_batch_size: "1000"
+    accounts_verification_batch_size: "1000"
+    affinity:
+      key: label-1
+      value: value
+    balance_definitions_max_batch_size: "10000"
+    earliest_start_time: ""
+    global_params_batch_size: "5000"
+    instance_params_batch_size: "5000"
+    instance_values_initialise_batch_size: "500"
+    params_rename_batch_size: "1000"
+    params_verifier_batch_size: "1000"
+    post_posting_failures_batch_size: "500"
+    post_posting_watermarks_bucket_size: "1024"
+    postings_internal_accounts_batch_size: "1000"
+    postings_max_batch_size: "1000"
+    runner_backoff_duration: 5ms
+    verifier_backoff_duration: 5ms
+  downtime_sleep_seconds: "0"
+  inactive_period: 00:00-00:00
+  pre_downtime:
+    accounts_initialise_batch_size: "1000"
+    accounts_max_batch_size: "1000"
+    accounts_verification_batch_size: "1000"
+    affinity:
+      key: label-1
+      value: value
+    balance_definitions_max_batch_size: "1000"
+    catchup_interval: 5m
+    global_params_batch_size: "1000"
+    instance_params_batch_size: "1000"
+    instance_values_initialise_batch_size: "500"
+    params_rename_batch_size: "1000"
+    params_verifier_batch_size: "1000"
+    postings_internal_accounts_batch_size: "500"
+    postings_max_batch_size: "1000"
+    runner_backoff_duration: 1s
+    verifier_backoff_duration: 1s
+usage:
+  committer:
+    schedule: 0 12 6,13,20,27 * *
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: usage_migrator
+    name: usage
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: usage
+  num_committed_accounts: "0"
+vault:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: vault_migrator
+    name: vault
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "50"
+    port: "5432"
+    replica:
+      host: null
+      port: "5432"
+    replication_slot: vault_replication
+    replication_user: vault
+    root_user: ""
+    user: vault
+  semver:
+    build: ""
+    label: ""
+    major: "0"
+    minor: "0"
+    patch: "0"
+    prerelease: ""
+    version: 0.0.0
+vault_jobs:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: vault_jobs_migrator
+    name: vault_jobs
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: vault_jobs
+vault_jobs_testing_integration:
+  endpoint: vault-jobs-testing-gateway.xinyuan-test2.dh-production.tmachine.io
+warm_storage:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: warm_storage_migrator
+    name: warm_storage
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "40"
+    port: "5432"
+    replica:
+      host: ""
+      port: "5432"
+    user: warm_storage
+  db_init:
+    host: ""
+webhook_operator:
+  namespace: webhook-operator
+workflow_engine:
+  legacy_schema_versions_enabled: "true"
+  logback_xml: |
+    <configuration>
+
+      <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+      <conversionRule conversionWord="tracingId"
+                      converterClass="net.thoughtmachine.logging.TracingIdLogConverter" />
+
+      <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+          <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+          <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <threadName/>
+                <message>
+                  <fieldName>msg</fieldName>
+                </message>
+                <logLevel>
+                  <fieldName>level</fieldName>
+                </logLevel>
+                <stackTrace/>
+                <pattern>
+                    <pattern>
+                        {
+                            "time": "%date{\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\", UTC}",
+                            "file": "%logger\\(%file:%line\\)",
+                            "func": "%method",
+                            "tracingId": "%tracingId"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+
+          <!-- keep stdout to info level -->
+          <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+              <level>INFO</level>
+          </filter>
+      </appender>
+
+      <appender name="monitoring" class="net.thoughtmachine.logging.MonitoringAppender">
+      </appender>
+
+      <!-- set our logging to DEBUG but restrict to higher levels all libraries -->
+      <logger name="ch.qos.logback" level="WARN"/>
+      <logger name="io.grpc" level="WARN"/>
+      <logger name="io.netty.util" level="INFO"/>
+      <logger name="com.zaxxer.hikari" level="WARN"/>
+      <logger name="com.opentable.db.postgres" level="WARN"/>
+      <logger name="org.flywaydb.core.internal" level="WARN"/>
+      <logger name="org.eclipse.jetty" level="WARN" />
+      <logger name="org.eclipse.jetty.server.handler.ContextHandler" level="ERROR" />
+      <logger name="org.jooq.Constants" level="WARN"/>
+      <logger name="org.jooq.tools.StopWatch" level="INFO"/>
+      <logger name="org.jooq.impl.DefaultConnectionProvider" level="INFO"/>
+      <logger name="org.apache.kafka" level="WARN"/>
+      <logger name="org.komamitsu.fluency" level="ERROR"/>
+      <logger name="org.squirrelframework.foundation.fsm.impl.AbstractExecutionService" level="OFF"/>
+
+      <!--that's the one that outputs all the queries-->
+      <logger name="net.thoughtmachine.enterprise.util.CustomJooqLoggerListener" level="INFO"/>
+
+      <logger name="net.thoughtmachine" level="DEBUG"/>
+
+      <root level="info">
+        <appender-ref ref="stdout" />
+        <appender-ref ref="monitoring" />
+      </root>
+
+    </configuration>
+workflow_processor:
+  logback_xml: |
+    <configuration>
+
+      <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+      <conversionRule conversionWord="tracingId"
+                      converterClass="net.thoughtmachine.logging.TracingIdLogConverter" />
+
+      <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+          <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+          <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <threadName/>
+                <message>
+                  <fieldName>msg</fieldName>
+                </message>
+                <logLevel>
+                  <fieldName>level</fieldName>
+                </logLevel>
+                <stackTrace/>
+                <pattern>
+                    <pattern>
+                        {
+                            "time": "%date{\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\", UTC}",
+                            "file": "%logger\\(%file:%line\\)",
+                            "func": "%method",
+                            "tracingId": "%tracingId"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+
+          <!-- keep stdout to info level -->
+          <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+              <level>INFO</level>
+          </filter>
+      </appender>
+
+      <appender name="monitoring" class="net.thoughtmachine.logging.MonitoringAppender">
+      </appender>
+
+      <!-- set our logging to DEBUG but restrict to higher levels all libraries -->
+      <logger name="ch.qos.logback" level="WARN"/>
+      <logger name="io.grpc" level="WARN"/>
+      <logger name="io.netty.util" level="INFO"/>
+      <logger name="com.zaxxer.hikari" level="WARN"/>
+      <logger name="com.opentable.db.postgres" level="WARN"/>
+      <logger name="org.flywaydb.core.internal" level="WARN"/>
+      <logger name="org.eclipse.jetty" level="WARN" />
+      <logger name="org.eclipse.jetty.server.handler.ContextHandler" level="ERROR" />
+      <logger name="org.jooq.Constants" level="WARN"/>
+      <logger name="org.jooq.tools.StopWatch" level="INFO"/>
+      <logger name="org.jooq.impl.DefaultConnectionProvider" level="INFO"/>
+      <logger name="org.apache.kafka" level="WARN"/>
+      <logger name="org.komamitsu.fluency" level="ERROR"/>
+      <logger name="org.squirrelframework.foundation.fsm.impl.AbstractExecutionService" level="OFF"/>
+
+      <!--that's the one that outputs all the queries-->
+      <logger name="net.thoughtmachine.enterprise.util.CustomJooqLoggerListener" level="INFO"/>
+
+      <logger name="net.thoughtmachine" level="DEBUG"/>
+
+      <root level="info">
+        <appender-ref ref="stdout" />
+        <appender-ref ref="monitoring" />
+      </root>
+
+    </configuration>
+workflow_simulator:
+  endpoint: workflow-simulator.xinyuan-test2.dh-production.tmachine.io
+  legacy_schema_versions_enabled: "true"
+  logback_xml: |
+    <configuration>
+
+      <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+      <conversionRule conversionWord="tracingId"
+                      converterClass="net.thoughtmachine.logging.TracingIdLogConverter" />
+
+      <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+          <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+          <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <threadName/>
+                <message>
+                  <fieldName>msg</fieldName>
+                </message>
+                <logLevel>
+                  <fieldName>level</fieldName>
+                </logLevel>
+                <stackTrace/>
+                <pattern>
+                    <pattern>
+                        {
+                            "time": "%date{\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\", UTC}",
+                            "file": "%logger\\(%file:%line\\)",
+                            "func": "%method",
+                            "tracingId": "%tracingId"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+
+          <!-- keep stdout to info level -->
+          <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+              <level>INFO</level>
+          </filter>
+      </appender>
+
+      <appender name="monitoring" class="net.thoughtmachine.logging.MonitoringAppender">
+      </appender>
+
+      <!-- set our logging to DEBUG but restrict to higher levels all libraries -->
+      <logger name="ch.qos.logback" level="WARN"/>
+      <logger name="io.grpc" level="WARN"/>
+      <logger name="io.netty.util" level="INFO"/>
+      <logger name="com.zaxxer.hikari" level="WARN"/>
+      <logger name="com.opentable.db.postgres" level="WARN"/>
+      <logger name="org.flywaydb.core.internal" level="WARN"/>
+      <logger name="org.eclipse.jetty" level="WARN" />
+      <logger name="org.eclipse.jetty.server.handler.ContextHandler" level="ERROR" />
+      <logger name="org.jooq.Constants" level="WARN"/>
+      <logger name="org.jooq.tools.StopWatch" level="INFO"/>
+      <logger name="org.jooq.impl.DefaultConnectionProvider" level="INFO"/>
+      <logger name="org.apache.kafka" level="WARN"/>
+      <logger name="org.komamitsu.fluency" level="ERROR"/>
+      <logger name="org.squirrelframework.foundation.fsm.impl.AbstractExecutionService" level="OFF"/>
+
+      <!--that's the one that outputs all the queries-->
+      <logger name="net.thoughtmachine.enterprise.util.CustomJooqLoggerListener" level="INFO"/>
+
+      <logger name="net.thoughtmachine" level="DEBUG"/>
+
+      <root level="info">
+        <appender-ref ref="stdout" />
+        <appender-ref ref="monitoring" />
+      </root>
+
+    </configuration>
+workflow_transform_executor:
+  step_limit: "1000000"
+workflows_api:
+  endpoint: workflows-api.xinyuan-test2.dh-production.tmachine.io
+  shared_endpoint: ""
+workflows_business_level_global_config:
+  bacs_direct_debit_unapplied_inbound_account: null
+  bacs_internal_account: null
+  bacs_internal_direct_debit_account: null
+  bacs_unapplied_funds_account: null
+  workflows_e2e_test_key: null
+workflows_callback_router:
+  streaming_api_consumer_config: |
+    # Public topics to be consumed by the callback router for auto trigger conditions.
+    # See {documentation-url}/reference/workflows-tickets/workflow-actions/callback-action/#streaming_autotrigger
+    ASYNC_CALLBACK_TOPICS:
+      - vault.api.v1.accounts.account.instance_param_vals.updated
+      - vault.api.v1.postings.posting_instruction_batch.created
+      - vault.core_api.v1.accounts.account.events
+      - vault.core_api.v1.accounts.account_update.events
+    # Public topics to be consumed by the callback router for auto instantiation conditions.
+    # See {documentation-url}/reference/workflows-tickets/workflow-auto-instantiations/#auto-instantiations-overview
+    AUTO_INSTANTIATION_TOPICS:
+      - vault.api.v1.accounts.account.instance_param_vals.updated
+      - vault.core_api.v1.accounts.account.events
+      - vault.core_api.v1.accounts.account_schedule_job_execution_failure.events
+      - vault.core_api.v1.calendar.calendar.events
+      - vault.core_api.v1.calendar.calendar_event.events
+      - vault.core_api.v1.calendar.calendar_period.events
+      - vault.api.v1.customers.customer.customer_details.updated
+      - vault.core_api.v1.plans.plan_update.events
+      - vault.core_api.v1.plans.plan_migration.events
+      - vault.core_api.v1.scheduler.operation.events
+      - vault.core_api.v1.contracts.contract_notification.events
+xpl:
+  db:
+    admin_user: postgres
+    host: patroni-master
+    migrator_user: xpl_migrator
+    name: xpl
+    pool:
+      host: dbpool
+      port: "5430"
+    pool_max_conns: "20"
+    port: "5432"
+    user: xpl
+  endpoint: xpl-api.xinyuan-test2.dh-production.tmachine.io
+zipkin:
+  http:
+    url: ""
+  sample-rate: "0.01"
+  url: ""
