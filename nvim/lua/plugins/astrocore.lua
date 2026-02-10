@@ -36,50 +36,6 @@ return {
     -- Mappings can be configured through AstroCore as well.
     mappings = {
       n = {
-        ["<Leader>yt"] = {
-          function()
-            local current_file = vim.fn.expand "%:p"
-            local parent_dir_abs = vim.fn.fnamemodify(current_file, ":h")
-
-            -- Get the current working directory of Neovim (your project root)
-            local project_root = vim.fn.getcwd()
-
-            -- Escape the project root path for use as a literal pattern
-            local escaped_root = escape_pattern(project_root)
-
-            -- Substitute the root path from the absolute path string.
-            -- This should be robust against special characters.
-            local rel_path_segment = string.gsub(parent_dir_abs, "^" .. escaped_root .. "/", "", 1)
-
-            -- This is the command we want to run and put in history
-            local command_to_run = "plz watch " .. rel_path_segment .. "/..."
-
-            local Terminal = require("toggleterm.terminal").Terminal
-            local term = Terminal:new {
-              -- We run an empty zsh shell, ready for input
-              cmd = "zsh",
-              direction = "horizontal",
-              close_on_exit = false,
-
-              -- The on_open function runs right after the terminal buffer is ready
-              on_open = function(_)
-                local cr_key = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
-
-                -- 2. Inject the command line using a feedkeys approach
-                -- The 'silent' version is better for mapping execution
-                vim.api.nvim_feedkeys(
-                  command_to_run .. cr_key,
-                  "t", -- 't' mode means feedkeys to the terminal
-                  false -- not silent, so user sees input
-                )
-
-                -- Note: The feedkeys method automatically places the command into the current session's history.
-              end,
-            }
-            term:toggle()
-          end,
-          desc = "Run plz test for current parent directory",
-        },
         ["<Leader>yc"] = {
           function()
             local current_file = vim.fn.expand "%:p"
