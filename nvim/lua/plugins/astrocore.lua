@@ -33,6 +33,34 @@ return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
+    autocmds = {
+      zz_buffer_check = {
+        {
+          event = { "BufEnter", "WinEnter" },
+          callback = function()
+            update_zz_mode "zz" -- Call your logic here
+          end,
+        },
+      },
+      puku_fmt = {
+        {
+          event = "BufWritePost",
+          desc = "Format BUILD files with plz puku fmt on save",
+          pattern = { "BUILD" }, -- match Please BUILD files
+          callback = function()
+            -- Run the command asynchronously
+            vim.fn.jobstart({ "plz", "puku", "fmt", vim.fn.expand "%:p" }, {
+              on_exit = function(_, exit_code)
+                if exit_code == 0 then
+                  -- Reload the buffer to show changes without moving the cursor
+                  vim.cmd "checktime"
+                end
+              end,
+            })
+          end,
+        },
+      },
+    },
     -- Mappings can be configured through AstroCore as well.
     mappings = {
       n = {
