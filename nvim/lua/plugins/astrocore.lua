@@ -34,14 +34,6 @@ return {
   ---@type AstroCoreOpts
   opts = {
     autocmds = {
-      zz_buffer_check = {
-        {
-          event = { "BufEnter", "WinEnter" },
-          callback = function()
-            update_zz_mode "zz" -- Call your logic here
-          end,
-        },
-      },
       puku_fmt = {
         {
           event = "BufWritePost",
