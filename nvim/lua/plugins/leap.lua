@@ -1,5 +1,5 @@
 return {
-  "ggandor/leap.nvim",
+  url = "https://codeberg.org/andyg/leap.nvim",
   dependencies = {
     "tpope/vim-repeat",
     {},
@@ -8,7 +8,6 @@ return {
     {
       "catppuccin",
       optional = true,
-      ---@type CatppuccinOptions
       opts = { integrations = { leap = true } },
     },
   },
