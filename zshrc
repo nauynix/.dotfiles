@@ -27,3 +27,6 @@ setopt SHARE_HISTORY # allows multiple Zsh sessions to share the same command hi
 setopt EXTENDED_HISTORY # records the time when each command was executed along with the command itself
 setopt APPENDHISTORY # ensures that each command entered in the current session is appended to the history file immediately after execution
 export HISTTIMEFORMAT="%d/%m/%Y %H:%M] "
+
+# PSQL
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
