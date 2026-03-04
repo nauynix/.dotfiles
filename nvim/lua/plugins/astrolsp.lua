@@ -15,11 +15,13 @@ return {
       format_on_save = {
         enabled = true, -- enable or disable format on save globally
         allow_filetypes = { -- enable format on save for specified filetypes only
-          -- "go",
+          "go",
         },
-        ignore_filetypes = { -- disable format on save for specified filetypes
-          "python",
-        },
+        -- ignore_filetypes = { -- disable format on save for specified filetypes
+        --   "python",
+        --   "proto",
+        --   "ts",
+        -- },
       },
       timeout_ms = 1000, -- default format timeout
     },
