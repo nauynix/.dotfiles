@@ -56,6 +56,22 @@ return {
     -- Mappings can be configured through AstroCore as well.
     mappings = {
       n = {
+        ["<Leader>tz"] = {
+          function()
+            -- We toggle the global variable and refresh
+            if vim.g.vertical_term_ratio == 0.6 then
+              vim.g.vertical_term_ratio = 0.4
+              print("Vertical Width: 40%")
+            else
+              vim.g.vertical_term_ratio = 0.6
+              print("Vertical Width: 60%")
+            end
+            -- Double toggle to refresh size
+            vim.cmd("ToggleTerm")
+            vim.cmd("ToggleTerm")
+          end,
+          desc = "Toggle Vertical Terminal Width",
+        },
         ["<Leader>yc"] = {
           function()
             local current_file = vim.fn.expand "%:p"
