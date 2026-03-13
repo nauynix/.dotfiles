@@ -13,6 +13,7 @@ return {
   { import = "astrocommunity.motion.leap-nvim" },
   { import = "astrocommunity.search.grug-far-nvim" },
   { import = "astrocommunity.markdown-and-latex.render-markdown-nvim"},
+  { import = "astrocommunity.colorscheme.catppuccin"}
   -- { import = "astrocommunity.recipes.disable-tabline" },
   -- { import = "astrocommunity.utility.hover-nvim" },
   -- { import = "astrocommunity.lsp.lsp-signature-nvim" },
