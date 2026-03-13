@@ -16,15 +16,26 @@ if vim.g.neovide then
 end
 require("smart-paste").setup()
 
-vim.o.clipboard = "unnamedplus"
-vim.g.clipboard = {
-  name = 'OSC 52',
-  copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-  },
-  paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-  },
-}
+-- Detect the environment
+local is_ssh = os.getenv("SSH_CLIENT") ~= nil or os.getenv("SSH_TTY") ~= nil
+local is_linux = vim.loop.os_uname().sysname == "Linux"
+
+if is_linux and not is_ssh then
+    -- LOCAL LINUX: Use the standard system clipboard
+    -- This uses xclip or xsel, which handles the "replace" logic correctly.
+    vim.opt.clipboard = "unnamedplus"
+else
+    -- MAC / SSH / TMUX: Use the OSC 52 Provider
+    -- This "tunnels" the copy back to your Mac's iTerm2.
+    vim.g.clipboard = {
+        name = 'OSC 52',
+        copy = {
+            ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+            ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+        },
+        paste = {
+            ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+            ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+        },
+    }
+end
