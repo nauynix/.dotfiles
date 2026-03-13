@@ -144,6 +144,33 @@ return {
           function() require("snacks.picker").qflist() end,
           desc = "Open Quickfix in Snacks",
         },
+        ["<Leader>fo"] = {
+          function()
+            require("snacks.picker").smart {
+              filter = { cwd = true },
+              matcher = {
+                cwd_bonus = true,
+                frecency = true,
+                sort_empty = true,
+              },
+            }
+          end,
+          desc = "Find recent files (frecency)",
+        },
+        ["<Leader>fs"] = {
+          function()
+            require("snacks.picker").smart {
+              filter = { cwd = true },
+              matcher = {
+                cwd_bonus = true,
+                frecency = true,
+                sort_empty = true,
+              },
+              sort = { fields = { "source_id", "score:desc", "#text", "idx" } },
+            }
+          end,
+          desc = "Find smart (frecency)",
+        },
         -- Leap
         s = { "<Plug>(leap)", desc = "Leap to target" },
         S = { "<Plug>(leap-from-window)", desc = "Leap from window" },
