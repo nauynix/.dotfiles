@@ -13,18 +13,24 @@ local function url_encode(str)
   return str
 end
 -- Helper function to open a URL cross-platform
+-- When running over SSH, falls back to copying the URL to clipboard via OSC 52
 local function open_url_in_browser(url)
+  if vim.env.SSH_TTY or vim.env.SSH_CLIENT then
+    -- Remote session: copy URL to clipboard (OSC 52 forwards to local Mac) and notify
+    vim.fn.setreg("+", url)
+    vim.notify("URL copied to clipboard: " .. url, vim.log.levels.INFO)
+    return
+  end
+
   local open_command
   if vim.fn.has "mac" == 1 then
     open_command = "open"
   elseif vim.fn.has "unix" == 1 then
     open_command = "xdg-open"
   else
-    -- Fallback for Windows (adjust if needed for your environment)
     open_command = "start"
   end
 
-  -- Use jobstart for non-blocking execution
   vim.fn.jobstart({ open_command, url }, { detach = true })
 end
 
