@@ -1,0 +1,6 @@
+# Neovide Configuration
+# https://neovide.dev/configuration.html
+
+[font]
+normal = ["Cascadia Code NF"]
+size = 14.0

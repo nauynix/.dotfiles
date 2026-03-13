@@ -5,3 +5,4 @@
     ~/.tmux.conf.local: tmux.conf.local
     ~/.tmux.conf: tmux.conf
     ~/.config/nvim: nvim
+    ~/.config/neovide: neovide
