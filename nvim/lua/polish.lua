@@ -16,6 +16,21 @@ if vim.g.neovide then
 end
 require("smart-paste").setup()
 
+-- Make p/P paste from yank register ("0) by default,
+-- but allow explicit register pastes ("ap, "bp, etc.) to work normally
+vim.keymap.set("n", "p", '"0p', { noremap = true })
+vim.keymap.set("n", "P", '"0P', { noremap = true })
+for _, reg in ipairs({
+  '"', '*', '+', '-', '.', ':', '%', '/', '=',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9',
+  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+  'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+  's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+}) do
+  vim.keymap.set("n", '"' .. reg .. "p", '"' .. reg .. "p", { noremap = true })
+  vim.keymap.set("n", '"' .. reg .. "P", '"' .. reg .. "P", { noremap = true })
+end
+
 -- Detect the environment
 local is_ssh = os.getenv("SSH_CLIENT") ~= nil or os.getenv("SSH_TTY") ~= nil
 local is_linux = vim.loop.os_uname().sysname == "Linux"
