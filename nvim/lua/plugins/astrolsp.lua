@@ -5,9 +5,9 @@ return {
   opts = {
     -- Configuration table of features provided by AstroLSP
     features = {
-      codelens = true, -- enable/disable codelens refresh on start
+      codelens = false, -- disable for perf in large Go repos
       inlay_hints = false, -- enable/disable inlay hints on start
-      semantic_tokens = true, -- enable/disable semantic token highlighting
+      semantic_tokens = false, -- disable for scroll perf; treesitter handles highlighting
     },
     -- customize lsp formatting options
     formatting = {

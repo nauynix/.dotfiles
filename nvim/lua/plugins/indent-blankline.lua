@@ -17,7 +17,7 @@ return {
         enable = true,
         style = { { fg = "#6699cc" } },
         duration = 0,
-        delay = 0,
+        delay = 100,
         chars = {
           horizontal_line = "─",
           vertical_line = "│",
