@@ -44,5 +44,11 @@ return {
       desc = "Add buffer diagnostics to Agentic",
       mode = { "n" },
     },
+    {
+      "<Leader>as",
+      function() require("agentic").switch_provider() end,
+      desc = "Switch Agentic provider",
+      mode = { "n" },
+    },
   },
 }
