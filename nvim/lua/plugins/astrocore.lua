@@ -104,7 +104,8 @@ return {
         },
 
         -- Optional: Add a name for the group in which-key menu
-        ["<Leader>y"] = { name = "Yank" },
+        ["<Leader>a"] = { desc = "Agentic" },
+        ["<Leader>y"] = { desc = "Yank" },
         -- Custom launcher for lazygit to remove escape binding
         ["<Leader>gg"] = {
           function()
